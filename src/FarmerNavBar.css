@@ -1,0 +1,52 @@
+/* FarmerNavBar.css */
+.farmer-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #4CAF50; /* Green color */
+    z-index: 1000;
+    padding: 10px 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between; /* Keeps logo and language selector at edges */
+    align-items: center;
+}
+
+.navbar-logo h2 {
+    color: white;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.navbar-links {
+    position: absolute; /* Position absolutely to center */
+    left: 50%; /* Move to horizontal center */
+    transform: translateX(-50%); /* Adjust back to true center */
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links li {
+    cursor: pointer;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon {
+    margin-right: 8px;
+}
+
+.navbar-links li:hover {
+    opacity: 0.8;
+}

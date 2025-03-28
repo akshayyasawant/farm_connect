@@ -1,0 +1,64 @@
+.home-page {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f5f3;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  background-color: #78cc78;
+  text-align: center;
+}
+
+.content h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  font-family: 'Segoe UI Black', sans-serif;
+  color: #333;
+}
+
+.content p {
+  font-size: 20px;
+  margin-bottom: 30px;
+  color: #6c757d;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.button-container button {
+  padding: 15px 30px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s;
+  color: white;
+  font-weight: bold;
+  min-width: 200px;
+}
+
+.button-container button:hover {
+  transform: scale(1.05);
+}
+
+.button-container button:first-child {
+  background-color: #38a169;
+}
+
+.button-container button:last-child {
+  background-color: #3182ce;
+} 

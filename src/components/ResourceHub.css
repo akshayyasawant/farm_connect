@@ -1,0 +1,204 @@
+.resource-hub {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.resource-hub h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.tab {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tab:hover {
+    background-color: #e9ecef;
+    transform: translateY(-2px);
+}
+
+.tab.active {
+    background-color: #2f855a;
+    color: white;
+}
+
+.tab svg {
+    font-size: 1.2rem;
+}
+
+.content {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+/* Schemes Container */
+.schemes-container,
+.subsidies-container,
+.tips-container,
+.market-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.scheme-card,
+.subsidy-card,
+.tips-card,
+.market-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.scheme-card:hover,
+.subsidy-card:hover,
+.tips-card:hover,
+.market-card:hover {
+    transform: translateY(-5px);
+}
+
+.scheme-card h3,
+.subsidy-card h3,
+.tips-card h3,
+.market-card h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.scheme-details,
+.subsidy-details {
+    margin-top: 1rem;
+}
+
+.scheme-details h4,
+.subsidy-details h4 {
+    color: #2f855a;
+    margin: 1rem 0 0.5rem 0;
+}
+
+.scheme-details p,
+.subsidy-details p {
+    color: #4a5568;
+    line-height: 1.6;
+}
+
+.scheme-details ul,
+.subsidy-details ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.scheme-details li,
+.subsidy-details li {
+    color: #4a5568;
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.scheme-details li::before,
+.subsidy-details li::before {
+    content: "•";
+    color: #2f855a;
+    position: absolute;
+    left: 0;
+}
+
+.apply-link,
+.market-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #2f855a;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.apply-link:hover,
+.market-link:hover {
+    background-color: #276749;
+}
+
+/* Tips Container */
+.tips-card ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.tips-card li {
+    color: #4a5568;
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.tips-card li::before {
+    content: "✓";
+    color: #2f855a;
+    position: absolute;
+    left: 0;
+}
+
+/* Market Container */
+.market-card .source {
+    color: #718096;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .resource-hub {
+        padding: 1rem;
+    }
+
+    .tabs {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .tab {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+
+    .schemes-container,
+    .subsidies-container,
+    .tips-container,
+    .market-container {
+        grid-template-columns: 1fr;
+    }
+} 
