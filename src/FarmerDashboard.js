@@ -7,6 +7,7 @@ import subscriptionImage from './assets/subscription-image.png';
 import Footer from './components/Footer';
 import { useLanguage } from './context/LanguageContext';
 import LanguageSelector from './components/LanguageSelector';
+import ChatBot from './components/ChatBot';
 
 const translations = {
   en: {
@@ -273,6 +274,7 @@ const FarmerDashboard = () => {
             )}
         </div>
         <Footer />
+        <ChatBot />
         </>
     );
 };

@@ -10,13 +10,33 @@ const ChatBot = () => {
     const [error, setError] = useState(null);
     const [language, setLanguage] = useState('hindi');
     const [isOpen, setIsOpen] = useState(false);
+    const [isApiKeyValid, setIsApiKeyValid] = useState(false);
     const messagesEndRef = useRef(null);
 
     // Initialize Gemini API with environment variable
     const API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
-    console.log('API Key loaded:', API_KEY ? 'Yes' : 'No');
     
-    const ai = new GoogleGenAI({ apiKey: API_KEY });
+    useEffect(() => {
+        // Check if API key is valid
+        if (!API_KEY) {
+            console.error('API Key not found in environment variables');
+            setError('API key not found. Please check your environment variables.');
+            setIsApiKeyValid(false);
+            return;
+        }
+        
+        try {
+            // Test the API key by creating a new instance
+            const ai = new GoogleGenAI({ apiKey: API_KEY });
+            setIsApiKeyValid(true);
+            setError(null);
+            console.log('API Key validated successfully');
+        } catch (error) {
+            console.error('Error validating API key:', error);
+            setError('Invalid API key. Please check your environment variables.');
+            setIsApiKeyValid(false);
+        }
+    }, [API_KEY]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -53,7 +73,7 @@ const ChatBot = () => {
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        if (!inputMessage.trim()) return;
+        if (!inputMessage.trim() || !isApiKeyValid) return;
 
         const userMessage = inputMessage.trim();
         setInputMessage('');
@@ -62,9 +82,7 @@ const ChatBot = () => {
         setError(null);
 
         try {
-            if (!API_KEY) {
-                throw new Error('API key not found. Please check your environment variables.');
-            }
+            const ai = new GoogleGenAI({ apiKey: API_KEY });
 
             // First, get the response in English
             const response = await ai.models.generateContent({
@@ -131,6 +149,14 @@ const ChatBot = () => {
     };
 
     const getPlaceholderText = () => {
+        if (!isApiKeyValid) {
+            return language === 'hindi' 
+                ? "API कुंजी सेट नहीं की गई है। कृपया प्रशासक से संपर्क करें।"
+                : language === 'marathi'
+                ? "API की सेट केलेली नाही. कृपया प्रशासकांशी संपर्क साधा."
+                : "API key not set. Please contact administrator.";
+        }
+
         switch(language) {
             case 'hindi':
                 return "कृषि से संबंधित कोई भी प्रश्न पूछें...";
@@ -198,9 +224,9 @@ const ChatBot = () => {
                             value={inputMessage}
                             onChange={(e) => setInputMessage(e.target.value)}
                             placeholder={getPlaceholderText()}
-                            disabled={isLoading}
+                            disabled={isLoading || !isApiKeyValid}
                         />
-                        <button type="submit" disabled={isLoading}>
+                        <button type="submit" disabled={isLoading || !isApiKeyValid}>
                             {language === 'hindi' ? 'भेजें' :
                              language === 'marathi' ? 'पाठवा' :
                              'Send'}
