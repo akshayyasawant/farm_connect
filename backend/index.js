@@ -1037,3 +1037,45 @@ app.get('/api/farmer/account', farmerOnly, async (req, res) => {
     }
 });
 
+// Get farmer analytics
+app.get('/api/farmer/analytics', farmerOnly, async (req, res) => {
+    try {
+        const farmerId = req.user.farmerId;
+        
+        // Get farmer details
+        const farmer = await Farmer.findById(farmerId);
+        if (!farmer) {
+            return res.status(404).json({ success: false, message: 'Farmer not found' });
+        }
+
+        // Get total products listed by the farmer
+        const totalProducts = await Product.countDocuments({ farmerId: farmerId });
+
+        // Get total revenue from sold products
+        const products = await Product.find({ farmerId: farmerId });
+        const totalRevenue = products.reduce((sum, product) => {
+            return sum + (product.price * product.quantity);
+        }, 0);
+
+        // Check if farmer is featured
+        const featuredFarmer = await FeaturedFarmer.findOne({
+            firstName: farmer.firstName,
+            lastName: farmer.lastName
+        });
+        const isFeatured = !!featuredFarmer;
+
+        // Return analytics data
+        res.json({
+            success: true,
+            totalLandArea: farmer.farmerDetails.totalArea,
+            areaUnderCultivation: farmer.farmerDetails.areaUnderCultivation,
+            totalProducts,
+            totalRevenue,
+            isFeatured
+        });
+    } catch (error) {
+        console.error('Error fetching farmer analytics:', error);
+        res.status(500).json({ success: false, message: 'Error fetching analytics data' });
+    }
+});
+

@@ -28,6 +28,7 @@ import YourOrders from './components/YourOrders';
 import FarmingToolsPage from './components/FarmingToolsPage';
 import BuyerSubscriptionPage from './components/SubscriptionForm';
 import ResourceHub from './components/ResourceHub'; // Import the ResourceHub component
+import FarmerAnalytics from './components/FarmerAnalytics';
 import { LanguageProvider } from './context/LanguageContext';
 
 
@@ -101,6 +102,7 @@ const AppRoutes = () => {
       <Route path="/products/:category" element={<Products />} /> {/* Dynamic route */}
       <Route path="/cart" element={<Cart />} />
       <Route path="/resource-hub" element={<ProtectedRoute><ResourceHub /></ProtectedRoute>} />
+      <Route path="/farmer-analytics" element={<ProtectedRoute><FarmerAnalytics /></ProtectedRoute>} />
     </Routes>
   );
 };

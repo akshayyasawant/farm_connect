@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSeedling, faHandHoldingUsd, faBook, faTractor, faFileAlt, faInfoCircle, faCheckCircle, faExclamationTriangle, faChevronDown, faChevronUp, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faSeedling, faHandHoldingUsd, faBook, faTractor, faFileAlt, faInfoCircle, faCheckCircle, faExclamationTriangle, faTimes } from '@fortawesome/free-solid-svg-icons';
 import FarmerNavBar from '../FarmerNavBar';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSelector from './LanguageSelector';
+import { subsidyTranslations } from '../translations/subsidies';
+import { grantTranslations } from '../translations/grants';
+import { farmingTipsTranslations } from '../translations/farmingTips';
+import { marketInfoTranslations } from '../translations/marketInfo';
 import './ResourceHub.css';
 
-const ResourceHubPage = () => {
-    const [activeTab, setActiveTab] = useState('schemes');
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [showModal, setShowModal] = useState(false);
-
-    const openModal = (item, type) => {
-        setSelectedItem({ ...item, type });
-        setShowModal(true);
-    };
-
-    const closeModal = () => {
-        setShowModal(false);
-        setSelectedItem(null);
-    };
-
-    const schemes = [
-        {
+const translations = {
+  en: {
+    title: "Farmer Resource Hub",
+    tabs: {
+      schemes: "Government Schemes",
+      subsidies: "Subsidies",
+      grants: "Government Grants",
+      tips: "Farming Tips",
+      market: "Market Information"
+    },
+    viewDetails: "View Details",
+    schemes: {
+      pmKisan: {
             title: "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)",
             description: "Direct income support of ₹6,000 per year to all landholding farmer families.",
             eligibility: "All landholding farmer families",
@@ -55,10 +57,9 @@ const ResourceHubPage = () => {
                 "Contact helpline for assistance",
                 "Annual renewal required",
                 "Special provisions for differently-abled farmers"
-            ],
-            link: "https://pmkisan.gov.in/"
+        ]
         },
-        {
+      kcc: {
             title: "Kisan Credit Card (KCC)",
             description: "Credit card for farmers to meet their agricultural needs with interest subvention.",
             eligibility: "All farmers including tenant farmers, sharecroppers",
@@ -97,753 +98,553 @@ const ResourceHubPage = () => {
                 "Emergency credit available",
                 "Annual renewal required",
                 "Special provisions for women farmers"
+        ]
+      }
+    },
+    modal: {
+      eligibility: "Eligibility",
+      benefits: "Benefits",
+      requiredDocuments: "Required Documents",
+      howToApply: "How to Apply",
+      importantNotes: "Important Notes",
+      applyNow: "Apply Now",
+      learnMore: "Learn More"
+    }
+  },
+  mr: {
+    title: "शेतकरी संसाधन केंद्र",
+    tabs: {
+      schemes: "सरकारी योजना",
+      subsidies: "सबसिडी",
+      grants: "सरकारी अनुदान",
+      tips: "शेती टिप्स",
+      market: "बाजार माहिती"
+    },
+    viewDetails: "तपशील पहा",
+    schemes: {
+      pmKisan: {
+        title: "पीएम-किसान (प्रधानमंत्री किसान सम्मान निधी)",
+        description: "सर्व जमीनधारक शेतकरी कुटुंबांना दरवर्षी ₹6,000 चे थेट उत्पन्न समर्थन.",
+        eligibility: "सर्व जमीनधारक शेतकरी कुटुंबे",
+            benefits: [
+          "दरवर्षी तीन समान हप्त्यांमध्ये ₹6,000",
+          "बँक खात्यात थेट हस्तांतरण",
+          "मध्यस्थ नाही",
+          "कृषी खर्च पूर्ण करण्यास मदत",
+          "जैविक शेतीसाठी अतिरिक्त लाभ",
+          "महिला शेतकऱ्यांसाठी विशेष तरतूद"
             ],
+            documents: [
+          "आधार कार्ड",
+          "जमीन दस्तऐवज",
+          "बँक खाते तपशील",
+          "अलीकडील फोटो",
+          "उत्पन्न प्रमाणपत्र",
+          "जात प्रमाणपत्र (जर लागू असेल तर)"
+            ],
+            howToApply: [
+          "जवळच्या कॉमन सर्व्हिस सेंटर (CSC) ला भेट द्या",
+          "आधार कार्ड आणि जमीन दस्तऐवज सबमिट करा",
+          "पीएम-किसान फॉर्म भरा",
+          "थेट लाभ हस्तांतरणासाठी नोंदणी करा",
+          "OTP द्वारे तपशील सत्यापित करा",
+          "पुष्टीकरण संदेश प्राप्त करा"
+            ],
+            importantNotes: [
+          "अर्ज शुल्क आवश्यक नाही",
+          "बँक खाते तपशील बदलल्यास अपडेट करा",
+          "लाभार्थी स्थिती ऑनलाइन तपासा",
+          "सहाय्यासाठी हेल्पलाइन संपर्क साधा",
+          "वार्षिक नूतनीकरण आवश्यक",
+          "विकलांग शेतकऱ्यांसाठी विशेष तरतूद"
+        ]
+      },
+      kcc: {
+        title: "किसान क्रेडिट कार्ड (केसीसी)",
+        description: "व्याज सबसिडीसह शेतकऱ्यांसाठी कृषी गरजा पूर्ण करण्यासाठी क्रेडिट कार्ड।",
+        eligibility: "भाडेकरू आणि शेअरक्रॉपर सहित सभी शेतकरी",
+            benefits: [
+          "2% व्याज सबसिडी",
+          "वेळेवर परतफेडीसाठी अतिरिक्त 3%",
+          "लवचिक क्रेडिट मर्यादा",
+          "विमा कव्हरेज",
+          "प्रोसेसिंग शुल्क नाही",
+          "आपत्कालीन क्रेडिट सुविधा",
+          "पीक विमा कव्हरेज"
+            ],
+            documents: [
+          "जमीन दस्तऐवज",
+          "आयडी प्रूफ",
+          "बँक खाते तपशील",
+          "अलीकडील फोटो",
+          "पीक तपशील",
+          "उत्पन्न प्रूफ",
+          "मालमत्ता दस्तऐवज"
+            ],
+            howToApply: [
+          "जवळच्या बँक शाखेला भेट द्या",
+          "जमीन दस्तऐवज आणि आयडी प्रूफ सबमिट करा",
+          "केसीसी अर्ज फॉर्म भरा",
+          "2 आठवड्यांत क्रेडिट कार्ड मिळवा",
+          "KYC सत्यापन पूर्ण करा",
+          "आधारशी लिंक करा",
+          "मोबाईल बँकिंग सेट करा"
+            ],
+            importantNotes: [
+          "प्रोसेसिंग शुल्क नाही",
+          "विमा कव्हरेज समाविष्ट",
+          "लवचिक परतफेड पर्याय",
+          "ATMs वर वापरता येते",
+          "आपातकालीन क्रेडिट उपलब्ध",
+          "वार्षिक नूतनीकरण आवश्यक",
+          "महिला शेतकऱ्यांसाठी विशेष तरतूद"
+        ]
+      },
+      grants: {
+        startupIndia: {
+          title: "स्टार्टअप इंडिया कृषी अनुदान",
+          description: "कृषी स्टार्टअप आणि नवोपक्रमांसाठी आर्थिक सहाय्य.",
+          eligibility: "एग्री-टेक स्टार्टअप आणि नवोपक्रमकर्ते",
+          benefits: [
+            "₹25 लाख पर्यंत अनुदान",
+            "मार्गदर्शन सहाय्य",
+            "तांत्रिक मार्गदर्शन",
+            "बाजार संबंध",
+            "प्रशिक्षण कार्यक्रम",
+            "नेटवर्किंग संधी"
+          ],
+          documents: [
+            "व्यवसाय योजना",
+            "नवोपक्रम तपशील",
+            "संघटना पात्रता",
+            "आर्थिक अंदाज",
+            "बाजार विश्लेषण",
+            "तांत्रिक व्यवहार्यता अहवाल"
+          ],
+          howToApply: [
+            "स्टार्टअप इंडिया पोर्टलवर नोंदणी करा",
+            "विस्तृत प्रस्ताव सबमिट करा",
+            "तांत्रिक मूल्यांकन मिळवा",
+            "निवड समितीसमोर सादर करा",
+            "मंजुरी मिळवा",
+            "अनुदान प्राप्त करा"
+          ],
+          importantNotes: [
+            "नवोपक्रम केंद्रित असणे आवश्यक",
+            "नियमित प्रगती अहवाल आवश्यक",
+            "माइलस्टोन ट्रॅकिंग अनिवार्य",
+            "लेखापरीक्षण आवश्यकता",
+            "आयपी संरक्षण मार्गदर्शन",
+            "बाजार प्रमाणीकरण आवश्यक"
+          ]
+        },
+        agriExport: {
+          title: "कृषी निर्यात अनुदान",
+          description: "कृषी उत्पादनांची निर्यात करणाऱ्या शेतकऱ्यांना आणि संस्थांना सहाय्य.",
+          eligibility: "कृषी उत्पादनांची निर्यात करणारे शेतकरी आणि संस्था",
+          benefits: [
+            "निर्यात पायाभूत सुविधा सहाय्य",
+            "गुणवत्ता प्रमाणपत्र सहाय्य",
+            "बाजार विकास सहाय्य",
+            "प्रशिक्षण कार्यक्रम",
+            "लॉजिस्टिक्स सहाय्य",
+            "ब्रँड विकास"
+          ],
+          documents: [
+            "निर्यात नोंदणी",
+            "व्यवसाय योजना",
+            "बाजार विश्लेषण",
+            "उत्पादन तपशील",
+            "गुणवत्ता प्रमाणपत्रे",
+            "आर्थिक विवरण"
+          ],
+          howToApply: [
+            "निर्यातकर्ता म्हणून नोंदणी करा",
+            "प्रस्ताव सबमिट करा",
+            "तांत्रिक मूल्यांकन मिळवा",
+            "मंजुरी मिळवा",
+            "योजना अंमलबजावणी करा",
+            "लाभ मिळवा"
+          ],
+          importantNotes: [
+            "निर्यात केंद्रित असणे आवश्यक",
+            "गुणवत्ता मानके पूर्ण करणे आवश्यक",
+            "नियमित अहवाल आवश्यक",
+            "बाजार अनुपालन आवश्यक",
+            "दस्तऐवजीकरण अनिवार्य",
+            "पुढील भेटी आवश्यक"
+          ]
+        },
+        organicFarming: {
+          title: "जैविक शेती अनुदान",
+          description: "जैविक शेतीकडे संक्रमणासाठी आर्थिक सहाय्य.",
+          eligibility: "जैविक शेती करणारे किंवा संक्रमण करणारे शेतकरी",
+          benefits: [
+            "प्रमाणपत्र सहाय्य",
+            "इनपुट सहाय्य",
+            "प्रशिक्षण कार्यक्रम",
+            "बाजार संबंध",
+            "पायाभूत सुविधा सहाय्य",
+            "तांत्रिक मार्गदर्शन"
+          ],
+          documents: [
+            "जमीन मालकी प्रमाणपत्र",
+            "जैविक शेती योजना",
+            "माती तपासणी अहवाल",
+            "मागील शेती नोंदी",
+            "बाजार संबंध प्रमाणपत्र",
+            "प्रशिक्षण प्रमाणपत्रे"
+          ],
+          howToApply: [
+            "जैविक शेती विभागाशी संपर्क साधा",
+            "अर्ज सबमिट करा",
+            "क्षेत्र तपासणी मिळवा",
+            "मंजुरी मिळवा",
+            "जैविक पद्धती अंमलबजावणी करा",
+            "प्रमाणपत्र मिळवा"
+          ],
+          importantNotes: [
+            "जैविक मानके पूर्ण करणे आवश्यक",
+            "नियमित तपासणी आवश्यक",
+            "दस्तऐवजीकरण अनिवार्य",
+            "प्रशिक्षण उपस्थिती आवश्यक",
+            "गुणवत्ता तपासणी आवश्यक",
+            "पुढील भेटी अनिवार्य"
+          ]
+        }
+      },
+    },
+    modal: {
+      eligibility: "पात्रता",
+      benefits: "लाभ",
+      requiredDocuments: "आवश्यक दस्तऐवज",
+      howToApply: "अर्ज कसा करावा",
+      importantNotes: "महत्वाच्या नोट्स",
+      applyNow: "आता अर्ज करा",
+      learnMore: "अधिक जाणून घ्या"
+    }
+  },
+  hi: {
+    title: "किसान संसाधन केंद्र",
+    tabs: {
+      schemes: "सरकारी योजनाएं",
+      subsidies: "सब्सिडी",
+      grants: "सरकारी अनुदान",
+      tips: "खेती के टिप्स",
+      market: "बाजार जानकारी"
+    },
+    viewDetails: "विवरण देखें",
+    schemes: {
+      pmKisan: {
+        title: "पीएम-किसान (प्रधानमंत्री किसान सम्मान निधि)",
+        description: "सभी जमीनधारक किसान परिवारों को प्रति वर्ष ₹6,000 का प्रत्यक्ष आय सहायता।",
+        eligibility: "सभी जमीनधारक किसान परिवार",
+            benefits: [
+          "प्रति वर्ष तीन समान किस्तों में ₹6,000",
+          "बैंक खातों में प्रत्यक्ष हस्तांतरण",
+          "कोई बिचौलिया नहीं",
+          "कृषि खर्च पूर्ण करने में मदद",
+          "जैविक खेती के लिए अतिरिक्त लाभ",
+          "महिला किसानों के लिए विशेष प्रावधान"
+            ],
+            documents: [
+          "आधार कार्ड",
+          "जमीन दस्तावेज",
+          "बैंक खाता विवरण",
+          "हाल का फोटो",
+          "आय प्रमाणपत्र",
+          "जाति प्रमाणपत्र (यदि लागू हो)"
+            ],
+            howToApply: [
+          "निकटतम कॉमन सर्विस सेंटर (CSC) पर जाएं",
+          "आधार कार्ड और जमीन दस्तावेज जमा करें",
+          "पीएम-किसान फॉर्म भरें",
+          "प्रत्यक्ष लाभ हस्तांतरण के लिए पंजीकरण करें",
+          "OTP के माध्यम से विवरण सत्यापित करें",
+          "पुष्टि संदेश प्राप्त करें"
+            ],
+            importantNotes: [
+          "कोई आवेदन शुल्क नहीं",
+          "बैंक खाता विवरण बदलने पर अपडेट करें",
+          "लाभार्थी स्थिति ऑनलाइन जांचें",
+          "सहायता के लिए हेल्पलाइन से संपर्क करें",
+          "वार्षिक नवीनीकरण आवश्यक",
+          "दिव्यांग किसानों के लिए विशेष प्रावधान"
+        ]
+      },
+      kcc: {
+        title: "किसान क्रेडिट कार्ड (केसीसी)",
+        description: "ब्याज सबसिडी के साथ किसानों के लिए कृषि जरूरतों को पूरा करने के लिए क्रेडिट कार्ड।",
+        eligibility: "किराएदार किसान और शेयरक्रॉपर सहित सभी किसान",
+            benefits: [
+          "2% ब्याज सबसिडी",
+          "समय पर चुकौती पर अतिरिक्त 3%",
+          "लचीली क्रेडिट सीमा",
+          "बीमा कवरेज",
+          "कोई प्रोसेसिंग शुल्क नहीं",
+          "आपातकालीन क्रेडिट सुविधा",
+          "फसल बीमा कवरेज"
+            ],
+            documents: [
+          "जमीन दस्तावेज",
+          "पहचान प्रमाण",
+          "बैंक खाता विवरण",
+          "हाल का फोटो",
+          "फसल विवरण",
+          "आय प्रमाण",
+          "संपत्ति दस्तावेज"
+            ],
+            howToApply: [
+          "निकटतम बैंक शाखा पर जाएं",
+          "जमीन दस्तावेज और पहचान प्रमाण जमा करें",
+          "केसीसी अर्ज फॉर्म भरें",
+          "2 सप्ताह में क्रेडिट कार्ड प्राप्त करें",
+          "KYC सत्यापन पूर्ण करें",
+          "आधार से लिंक करें",
+          "मोबाइल बैंकिंग सेट करें"
+            ],
+            importantNotes: [
+          "कोई प्रोसेसिंग शुल्क नहीं",
+          "बीमा कवरेज शामिल",
+          "लचीली चुकौती विकल्प",
+          "ATMs पर उपयोग किया जा सकता है",
+          "आपातकालीन क्रेडिट उपलब्ध",
+          "वार्षिक नवीनीकरण आवश्यक",
+          "महिला किसानों के लिए विशेष प्रावधान"
+        ]
+      },
+      grants: {
+        startupIndia: {
+          title: "स्टार्टअप इंडिया कृषि अनुदान",
+          description: "कृषि स्टार्टअप और नवोपक्रमांसाठी वित्तीय सहायता।",
+          eligibility: "एग्री-टेक स्टार्टअप आणि नवोपक्रमकर्ते",
+          benefits: [
+            "₹25 लाख पर्यंत अनुदान",
+            "मेंटरशिप सहायता",
+            "तांत्रिक मार्गदर्शन",
+            "बाजार संबंध",
+            "प्रशिक्षण कार्यक्रम",
+            "नेटवर्किंग संधी"
+          ],
+          documents: [
+            "व्यवसाय योजना",
+            "नवोपक्रम तपशील",
+            "संघटना पात्रता",
+            "आर्थिक अंदाज",
+            "बाजार विश्लेषण",
+            "तांत्रिक व्यवहार्यता रिपोर्ट"
+          ],
+          howToApply: [
+            "स्टार्टअप इंडिया पोर्टल पर पंजीकरण करें",
+            "विस्तृत प्रस्ताव सबमिट करा",
+            "तांत्रिक मूल्यांकन प्राप्त करें",
+            "निवड समितीसमोर सादर करें",
+            "मंजुरी मिळवा",
+            "अनुदान प्राप्त करें"
+          ],
+          importantNotes: [
+            "नवोपक्रम केंद्रित असणे आवश्यक",
+            "नियमित प्रगती अहवाल आवश्यक",
+            "माइलस्टोन ट्रॅकिंग अनिवार्य",
+            "लेखापरीक्षण आवश्यकताएं",
+            "आईपी संरक्षण मार्गदर्शन",
+            "बाजार प्रमाणीकरण आवश्यक"
+          ]
+        },
+        agriExport: {
+          title: "कृषी निर्यात अनुदान",
+          description: "कृषी उत्पादों की निर्यात में शामिल किसानों और संगठनों के लिए सहायता।",
+          eligibility: "कृषी उत्पादों का निर्यात करने वाले किसान और संगठन",
+          benefits: [
+            "निर्यात पायाभूत सुविधा सहायता",
+            "गुणवत्ता प्रमाणन सहायता",
+            "बाजार विकास सहायता",
+            "प्रशिक्षण कार्यक्रम",
+            "लॉजिस्टिक्स सहायता",
+            "ब्रांड विकास"
+          ],
+          documents: [
+            "निर्यात पंजीकरण",
+            "व्यवसाय योजना",
+            "बाजार विश्लेषण",
+            "उत्पाद विवरण",
+            "गुणवत्ता प्रमाणपत्र",
+            "वित्तीय विवरण"
+          ],
+          howToApply: [
+            "निर्यातकर्ता के रूप में पंजीकरण करें",
+            "प्रस्ताव जमा करें",
+            "तांत्रिक मूल्यांकन प्राप्त करें",
+            "अनुमोदन प्राप्त करें",
+            "योजना लागू करें",
+            "लाभ प्राप्त करें"
+          ],
+          importantNotes: [
+            "निर्यात केंद्रित होना आवश्यक",
+            "गुणवत्ता मानके पूर्ण करना आवश्यक",
+            "नियमित रिपोर्टिंग आवश्यक",
+            "बाजार अनुपालन आवश्यक",
+            "दस्तावेजीकरण अनिवार्य",
+            "अनुवर्ती यात्राएं आवश्यक"
+          ]
+        },
+        organicFarming: {
+          title: "जैविक खेती अनुदान",
+          description: "जैविक खेती में संक्रमण के लिए वित्तीय सहायता।",
+          eligibility: "जैविक खेती करने वाले या संक्रमण करने वाले किसान",
+          benefits: [
+            "प्रमाणन सहायता",
+            "इनपुट सहायता",
+            "प्रशिक्षण कार्यक्रम",
+            "बाजार संबंध",
+            "बुनियादी ढांचा सहायता",
+            "तकनीकी मार्गदर्शन"
+          ],
+          documents: [
+            "जमीन स्वामित्व प्रमाण",
+            "जैविक खेती योजना",
+            "मृदा परीक्षण रिपोर्ट",
+            "पिछली खेती रिकॉर्ड",
+            "बाजार संबंध प्रमाण",
+            "प्रशिक्षण प्रमाणपत्र"
+          ],
+          howToApply: [
+            "जैविक खेती विभाग से संपर्क करें",
+            "आवेदन जमा करें",
+            "क्षेत्र निरीक्षण प्राप्त करें",
+            "अनुमोदन प्राप्त करें",
+            "जैविक पद्धती अंमलबजावणी करें",
+            "प्रमाणन प्राप्त करें"
+          ],
+          importantNotes: [
+            "जैविक मानके पूर्ण करणे आवश्यक",
+            "नियमित निरीक्षण आवश्यक",
+            "दस्तावेजीकरण अनिवार्य",
+            "प्रशिक्षण उपस्थिति आवश्यक",
+            "गुणवत्ता परीक्षण आवश्यक",
+            "अनुवर्ती यात्राएं अनिवार्य"
+          ]
+        }
+      },
+    },
+    modal: {
+      eligibility: "पात्रता",
+      benefits: "लाभ",
+      requiredDocuments: "आवश्यक दस्तऐवज",
+      howToApply: "अर्ज कसा करावा",
+      importantNotes: "महत्वपूर्ण नोट्स",
+      applyNow: "अभी आवेदन करें",
+      learnMore: "और जानें"
+    }
+  }
+};
+
+const ResourceHubPage = () => {
+    const [activeTab, setActiveTab] = useState('schemes');
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const { currentLanguage } = useLanguage();
+    const t = translations[currentLanguage];
+    const subsidyT = subsidyTranslations[currentLanguage];
+    const grantT = grantTranslations[currentLanguage];
+    const tipsT = farmingTipsTranslations[currentLanguage];
+    const marketT = marketInfoTranslations[currentLanguage];
+
+    const openModal = (item, type) => {
+        setSelectedItem({ ...item, type });
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+        setSelectedItem(null);
+    };
+
+    const schemes = [
+        {
+            title: t.schemes.pmKisan.title,
+            description: t.schemes.pmKisan.description,
+            eligibility: t.schemes.pmKisan.eligibility,
+            benefits: t.schemes.pmKisan.benefits,
+            documents: t.schemes.pmKisan.documents,
+            howToApply: t.schemes.pmKisan.howToApply,
+            importantNotes: t.schemes.pmKisan.importantNotes,
+            link: "https://pmkisan.gov.in/"
+        },
+        {
+            title: t.schemes.kcc.title,
+            description: t.schemes.kcc.description,
+            eligibility: t.schemes.kcc.eligibility,
+            benefits: t.schemes.kcc.benefits,
+            documents: t.schemes.kcc.documents,
+            howToApply: t.schemes.kcc.howToApply,
+            importantNotes: t.schemes.kcc.importantNotes,
             link: "https://www.rbi.org.in/Scripts/BS_ViewMasCirculardetails.aspx?id=12345"
-        },
-        {
-            title: "PM Fasal Bima Yojana",
-            description: "Crop insurance scheme to protect farmers against crop failure.",
-            eligibility: "All farmers growing notified crops",
-            benefits: [
-                "Comprehensive crop insurance",
-                "Low premium rates",
-                "Quick claim settlement",
-                "Coverage for natural disasters",
-                "Prevented sowing coverage",
-                "Post-harvest losses coverage",
-                "Localized calamity coverage"
-            ],
-            documents: [
-                "Land documents",
-                "Crop details",
-                "Bank account details",
-                "ID proof",
-                "Sowing certificate",
-                "Previous crop records",
-                "Bank passbook"
-            ],
-            howToApply: [
-                "Contact nearest insurance company",
-                "Submit crop details and land documents",
-                "Pay premium",
-                "Get insurance certificate",
-                "Register for SMS alerts",
-                "Link with bank account",
-                "Complete verification process"
-            ],
-            importantNotes: [
-                "Premium varies by crop",
-                "Government subsidy on premium",
-                "Claims settled within 2 weeks",
-                "Coverage for all major risks",
-                "Special provisions for organic farming",
-                "Additional coverage for natural disasters",
-                "Regular updates required"
-            ],
-            link: "https://pmfby.gov.in/"
-        },
-        {
-            title: "National Agriculture Market (eNAM)",
-            description: "Electronic trading platform for agricultural commodities.",
-            eligibility: "All registered farmers and traders",
-            benefits: [
-                "Better price discovery",
-                "Reduced transaction costs",
-                "Transparent trading",
-                "Quality testing facilities",
-                "Online payment system",
-                "Real-time price updates",
-                "Market linkage"
-            ],
-            documents: [
-                "Aadhaar card",
-                "Bank account details",
-                "Land documents",
-                "Recent photograph",
-                "Mobile number",
-                "Email ID",
-                "PAN card (for traders)"
-            ],
-            howToApply: [
-                "Visit nearest APMC market",
-                "Register on eNAM portal",
-                "Complete KYC verification",
-                "Link bank account",
-                "Get trading ID",
-                "Complete training",
-                "Start trading"
-            ],
-            importantNotes: [
-                "No registration fee",
-                "Mandatory quality testing",
-                "Real-time price updates",
-                "Secure payment system",
-                "24/7 support available",
-                "Regular updates required",
-                "Special provisions for small farmers"
-            ],
-            link: "https://enam.gov.in/"
-        },
-        {
-            title: "National Mission for Sustainable Agriculture (NMSA)",
-            description: "Promotes sustainable agriculture practices and climate-resilient farming.",
-            eligibility: "All farmers practicing sustainable agriculture",
-            benefits: [
-                "Subsidy for organic farming inputs",
-                "Support for water conservation",
-                "Training in sustainable practices",
-                "Financial assistance for equipment",
-                "Soil health management support",
-                "Climate-resilient farming guidance"
-            ],
-            documents: [
-                "Land ownership proof",
-                "Aadhaar card",
-                "Bank account details",
-                "Soil test report",
-                "Crop plan",
-                "Previous farming records"
-            ],
-            howToApply: [
-                "Contact nearest Krishi Vikas Kendra",
-                "Submit application with documents",
-                "Attend training sessions",
-                "Implement recommended practices",
-                "Get verification visit",
-                "Receive assistance"
-            ],
-            importantNotes: [
-                "Focus on sustainable practices",
-                "Regular monitoring required",
-                "Documentation of practices needed",
-                "Follow-up visits mandatory",
-                "Annual renewal required",
-                "Special focus on water conservation"
-            ],
-            link: "https://nmsa.dac.gov.in/"
-        },
-        {
-            title: "Pradhan Mantri Krishi Sinchai Yojana (PMKSY)",
-            description: "Ensures access to irrigation water for every farm field.",
-            eligibility: "Farmers with land holdings",
-            benefits: [
-                "Micro-irrigation support",
-                "Water conservation structures",
-                "Drip irrigation systems",
-                "Sprinkler irrigation",
-                "Water storage solutions",
-                "Training in water management"
-            ],
-            documents: [
-                "Land documents",
-                "Aadhaar card",
-                "Bank account details",
-                "Water source details",
-                "Soil test report",
-                "Crop plan"
-            ],
-            howToApply: [
-                "Visit nearest agriculture office",
-                "Submit application form",
-                "Get site inspection",
-                "Receive technical guidance",
-                "Installation of systems",
-                "Final verification"
-            ],
-            importantNotes: [
-                "Water source required",
-                "Regular maintenance needed",
-                "Training provided",
-                "Subsidy varies by system",
-                "Quality certification required",
-                "Follow-up visits mandatory"
-            ],
-            link: "https://pmksy.gov.in/"
         }
     ];
 
     const subsidies = [
         {
-            title: "Subsidy on Agricultural Machinery",
-            description: "Up to 40% subsidy on purchase of agricultural machinery and equipment.",
-            eligibleItems: [
-                {
-                    name: "Tractors",
-                    subsidy: "40% up to ₹60,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details"]
-                },
-                {
-                    name: "Harvesters",
-                    subsidy: "40% up to ₹2,00,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details"]
-                },
-                {
-                    name: "Seed drills",
-                    subsidy: "40% up to ₹30,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details"]
-                },
-                {
-                    name: "Sprayers",
-                    subsidy: "40% up to ₹15,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details"]
-                },
-                {
-                    name: "Solar pumps",
-                    subsidy: "60% up to ₹50,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details"]
-                },
-                {
-                    name: "Drip irrigation systems",
-                    subsidy: "50% up to ₹40,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details"]
-                }
-            ],
-            howToApply: [
-                "Select machinery from approved list",
-                "Submit application to agriculture department",
-                "Get approval and purchase machinery",
-                "Claim subsidy with bills",
-                "Complete verification process",
-                "Submit bank details",
-                "Receive subsidy amount"
-            ],
-            importantNotes: [
-                "Subsidy varies by equipment type",
-                "Maximum subsidy limits apply",
-                "Bank loan required for most items",
-                "Original bills required for claim",
-                "Regular maintenance required",
-                "Insurance coverage mandatory",
-                "Training provided for operation"
-            ],
-            link: "https://agricoop.gov.in/"
+            title: subsidyT.agriculturalMachinery.title,
+            description: subsidyT.agriculturalMachinery.description,
+            eligibleItems: subsidyT.agriculturalMachinery.eligibleItems,
+            howToApply: subsidyT.agriculturalMachinery.howToApply,
+            importantNotes: subsidyT.agriculturalMachinery.importantNotes,
+            link: "https://agriculture.gov.in/subsidies"
         },
         {
-            title: "Subsidy on Seeds and Fertilizers",
-            description: "Subsidy on certified seeds and fertilizers for better crop yield.",
-            eligibleItems: [
-                {
-                    name: "Certified seeds",
-                    subsidy: "50% up to ₹5,000 per hectare",
-                    requirements: ["Land ownership proof", "Crop plan", "Soil test report", "Bank account details"]
-                },
-                {
-                    name: "Bio-fertilizers",
-                    subsidy: "75% up to ₹3,000 per hectare",
-                    requirements: ["Land ownership proof", "Soil test report", "Organic farming certificate", "Bank account details"]
-                },
-                {
-                    name: "Organic fertilizers",
-                    subsidy: "50% up to ₹2,000 per hectare",
-                    requirements: ["Land ownership proof", "Organic farming certificate", "Soil test report", "Bank account details"]
-                },
-                {
-                    name: "Hybrid seeds",
-                    subsidy: "40% up to ₹4,000 per hectare",
-                    requirements: ["Land ownership proof", "Crop plan", "Soil test report", "Bank account details"]
-                },
-                {
-                    name: "Micro-nutrients",
-                    subsidy: "60% up to ₹1,500 per hectare",
-                    requirements: ["Land ownership proof", "Soil test report", "Crop plan", "Bank account details"]
-                }
-            ],
-            howToApply: [
-                "Visit nearest Krishi Vikas Kendra",
-                "Submit land documents",
-                "Get subsidy voucher",
-                "Purchase from authorized dealers",
-                "Submit purchase proof",
-                "Complete verification",
-                "Receive subsidy amount"
-            ],
-            importantNotes: [
-                "Subsidy varies by product",
-                "Maximum limits per hectare",
-                "Only for certified products",
-                "Original receipts required",
-                "Regular soil testing needed",
-                "Quality certification required",
-                "Special provisions for organic farming"
-            ],
-            link: "https://www.fertilizer.org/"
+            title: subsidyT.seedsAndFertilizers.title,
+            description: subsidyT.seedsAndFertilizers.description,
+            eligibleItems: subsidyT.seedsAndFertilizers.eligibleItems,
+            howToApply: subsidyT.seedsAndFertilizers.howToApply,
+            importantNotes: subsidyT.seedsAndFertilizers.importantNotes,
+            link: "https://agriculture.gov.in/seeds-subsidies"
         },
         {
-            title: "Subsidy on Greenhouses",
-            description: "Financial support for setting up greenhouses and polyhouses.",
-            eligibleItems: [
-                {
-                    name: "Polyhouse",
-                    subsidy: "50% up to ₹1,00,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details", "Technical feasibility report"]
-                },
-                {
-                    name: "Greenhouse",
-                    subsidy: "60% up to ₹1,50,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details", "Technical feasibility report"]
-                },
-                {
-                    name: "Shade net house",
-                    subsidy: "40% up to ₹50,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details", "Technical feasibility report"]
-                }
-            ],
-            howToApply: [
-                "Get technical feasibility report",
-                "Submit application with documents",
-                "Get site inspection",
-                "Receive approval",
-                "Install greenhouse",
-                "Claim subsidy"
-            ],
-            importantNotes: [
-                "Technical guidance provided",
-                "Regular maintenance required",
-                "Training mandatory",
-                "Quality standards must be met",
-                "Insurance coverage required",
-                "Follow-up visits mandatory"
-            ],
-            link: "https://agricoop.gov.in/"
-        },
-        {
-            title: "Subsidy on Cold Storage",
-            description: "Financial assistance for setting up cold storage facilities.",
-            eligibleItems: [
-                {
-                    name: "Cold storage unit",
-                    subsidy: "40% up to ₹2,00,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details", "Technical feasibility report"]
-                },
-                {
-                    name: "Cold room",
-                    subsidy: "35% up to ₹1,50,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details", "Technical feasibility report"]
-                },
-                {
-                    name: "Refrigeration unit",
-                    subsidy: "30% up to ₹1,00,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details", "Technical feasibility report"]
-                }
-            ],
-            howToApply: [
-                "Get technical feasibility report",
-                "Submit application with documents",
-                "Get site inspection",
-                "Receive approval",
-                "Install cold storage",
-                "Claim subsidy"
-            ],
-            importantNotes: [
-                "Technical guidance provided",
-                "Regular maintenance required",
-                "Training mandatory",
-                "Quality standards must be met",
-                "Insurance coverage required",
-                "Follow-up visits mandatory"
-            ],
-            link: "https://agricoop.gov.in/"
-        },
-        {
-            title: "Subsidy on Farm Equipment",
-            description: "Financial support for purchasing modern farm equipment.",
-            eligibleItems: [
-                {
-                    name: "Combine harvester",
-                    subsidy: "40% up to ₹3,00,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details", "Technical feasibility report"]
-                },
-                {
-                    name: "Thresher",
-                    subsidy: "35% up to ₹50,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details"]
-                },
-                {
-                    name: "Power tiller",
-                    subsidy: "40% up to ₹40,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details"]
-                }
-            ],
-            howToApply: [
-                "Select equipment from approved list",
-                "Submit application with documents",
-                "Get technical evaluation",
-                "Receive approval",
-                "Purchase equipment",
-                "Claim subsidy"
-            ],
-            importantNotes: [
-                "Technical guidance provided",
-                "Regular maintenance required",
-                "Training mandatory",
-                "Quality standards must be met",
-                "Insurance coverage required",
-                "Follow-up visits mandatory"
-            ],
-            link: "https://agricoop.gov.in/"
-        },
-        {
-            title: "Subsidy on Farm Infrastructure",
-            description: "Support for developing farm infrastructure and storage facilities.",
-            eligibleItems: [
-                {
-                    name: "Warehouse",
-                    subsidy: "40% up to ₹5,00,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details", "Technical feasibility report"]
-                },
-                {
-                    name: "Grain storage",
-                    subsidy: "35% up to ₹2,00,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details", "Technical feasibility report"]
-                },
-                {
-                    name: "Processing unit",
-                    subsidy: "40% up to ₹3,00,000",
-                    requirements: ["Land ownership proof", "Bank loan sanction", "Aadhaar card", "Bank account details", "Technical feasibility report"]
-                }
-            ],
-            howToApply: [
-                "Get technical feasibility report",
-                "Submit application with documents",
-                "Get site inspection",
-                "Receive approval",
-                "Construct infrastructure",
-                "Claim subsidy"
-            ],
-            importantNotes: [
-                "Technical guidance provided",
-                "Regular maintenance required",
-                "Training mandatory",
-                "Quality standards must be met",
-                "Insurance coverage required",
-                "Follow-up visits mandatory"
-            ],
-            link: "https://agricoop.gov.in/"
+            title: subsidyT.greenhouses.title,
+            description: subsidyT.greenhouses.description,
+            eligibleItems: subsidyT.greenhouses.eligibleItems,
+            howToApply: subsidyT.greenhouses.howToApply,
+            importantNotes: subsidyT.greenhouses.importantNotes,
+            link: "https://agriculture.gov.in/greenhouse-subsidies"
         }
     ];
 
     const grants = [
         {
-            title: "Startup India Agriculture Grant",
-            description: "Financial support for agricultural startups and innovations.",
-            eligibility: "Agri-tech startups and innovators",
-            benefits: [
-                "Up to ₹25 lakh grant",
-                "Mentorship support",
-                "Technical guidance",
-                "Market linkage",
-                "Training programs",
-                "Networking opportunities"
-            ],
-            documents: [
-                "Business plan",
-                "Innovation details",
-                "Team credentials",
-                "Financial projections",
-                "Market analysis",
-                "Technical feasibility report"
-            ],
-            howToApply: [
-                "Register on Startup India portal",
-                "Submit detailed proposal",
-                "Get technical evaluation",
-                "Present to selection committee",
-                "Receive approval",
-                "Get grant disbursement"
-            ],
-            importantNotes: [
-                "Innovation focus required",
-                "Regular progress reports needed",
-                "Milestone tracking mandatory",
-                "Audit requirements",
-                "IP protection guidance",
-                "Market validation required"
-            ],
+            ...grantT.grants.startupIndia,
             link: "https://www.startupindia.gov.in/"
         },
         {
-            title: "Agri-Export Grant",
-            description: "Support for farmers and organizations involved in agricultural exports.",
-            eligibility: "Farmers and organizations exporting agricultural products",
-            benefits: [
-                "Export infrastructure support",
-                "Quality certification assistance",
-                "Market development support",
-                "Training programs",
-                "Logistics support",
-                "Brand development"
-            ],
-            documents: [
-                "Export registration",
-                "Business plan",
-                "Market analysis",
-                "Product details",
-                "Quality certificates",
-                "Financial statements"
-            ],
-            howToApply: [
-                "Register as exporter",
-                "Submit proposal",
-                "Get technical evaluation",
-                "Receive approval",
-                "Implement plan",
-                "Claim benefits"
-            ],
-            importantNotes: [
-                "Export focus required",
-                "Quality standards must be met",
-                "Regular reporting needed",
-                "Market compliance required",
-                "Documentation mandatory",
-                "Follow-up visits required"
-            ],
+            ...grantT.grants.agriExport,
             link: "https://apeda.gov.in/"
         },
         {
-            title: "Organic Farming Grant",
-            description: "Financial support for transitioning to organic farming.",
-            eligibility: "Farmers practicing or transitioning to organic farming",
-            benefits: [
-                "Certification support",
-                "Input assistance",
-                "Training programs",
-                "Market linkage",
-                "Infrastructure support",
-                "Technical guidance"
-            ],
-            documents: [
-                "Land ownership proof",
-                "Organic farming plan",
-                "Soil test report",
-                "Previous farming records",
-                "Market linkage proof",
-                "Training certificates"
-            ],
-            howToApply: [
-                "Contact organic farming department",
-                "Submit application",
-                "Get field inspection",
-                "Receive approval",
-                "Implement organic practices",
-                "Get certification"
-            ],
-            importantNotes: [
-                "Organic standards must be met",
-                "Regular inspection required",
-                "Documentation mandatory",
-                "Training attendance required",
-                "Quality testing needed",
-                "Follow-up visits mandatory"
-            ],
+            ...grantT.grants.organicFarming,
             link: "https://organic.icar.gov.in/"
         }
     ];
 
     const farmingTips = [
         {
-            category: "Soil Health",
-            tips: [
-                {
-                    title: "Regular Soil Testing",
-                    description: "Test soil every 3 years to maintain optimal pH and nutrient levels",
-                    frequency: "Every 3 years",
-                    importance: "High",
-                    additionalInfo: "Use government-approved soil testing labs for accurate results"
-                },
-                {
-                    title: "Organic Matter Management",
-                    description: "Use organic manure and compost to improve soil structure",
-                    frequency: "Seasonally",
-                    importance: "High",
-                    additionalInfo: "Mix different types of organic matter for better results"
-                },
-                {
-                    title: "Crop Rotation",
-                    description: "Practice crop rotation to prevent soil nutrient depletion",
-                    frequency: "Annually",
-                    importance: "Medium",
-                    additionalInfo: "Plan rotation based on nutrient requirements of different crops"
-                },
-                {
-                    title: "pH Level Maintenance",
-                    description: "Maintain proper pH levels for optimal nutrient availability",
-                    frequency: "As needed",
-                    importance: "High",
-                    additionalInfo: "Use lime or sulfur to adjust pH levels"
-                },
-                {
-                    title: "Cover Cropping",
-                    description: "Plant cover crops to prevent soil erosion and improve fertility",
-                    frequency: "Between main crops",
-                    importance: "Medium",
-                    additionalInfo: "Choose cover crops based on your main crop requirements"
-                },
-                {
-                    title: "Mulching",
-                    description: "Use organic mulch to maintain soil moisture and temperature",
-                    frequency: "Seasonally",
-                    importance: "Medium",
-                    additionalInfo: "Use locally available materials for mulching"
-                }
-            ]
+            category: tipsT.categories.soilHealth.title,
+            tips: tipsT.categories.soilHealth.tips
         },
         {
-            category: "Water Management",
-            tips: [
-                {
-                    title: "Drip Irrigation",
-                    description: "Implement drip irrigation for efficient water usage",
-                    frequency: "Daily",
-                    importance: "High",
-                    additionalInfo: "Regular maintenance of drip lines is essential"
-                },
-                {
-                    title: "Mulching",
-                    description: "Use mulching techniques to reduce water evaporation",
-                    frequency: "Seasonally",
-                    importance: "Medium",
-                    additionalInfo: "Combine with drip irrigation for best results"
-                },
-                {
-                    title: "Rainwater Harvesting",
-                    description: "Harvest rainwater for sustainable water management",
-                    frequency: "Yearly",
-                    importance: "High",
-                    additionalInfo: "Regular cleaning of storage tanks is important"
-                },
-                {
-                    title: "Irrigation Scheduling",
-                    description: "Schedule irrigation based on crop needs and weather",
-                    frequency: "Daily",
-                    importance: "High",
-                    additionalInfo: "Use soil moisture sensors for accurate scheduling"
-                },
-                {
-                    title: "Water Quality Testing",
-                    description: "Regular testing of irrigation water quality",
-                    frequency: "Quarterly",
-                    importance: "Medium",
-                    additionalInfo: "Check for pH, salinity, and contaminants"
-                },
-                {
-                    title: "Conservation Tillage",
-                    description: "Practice conservation tillage to retain soil moisture",
-                    frequency: "Seasonally",
-                    importance: "Medium",
-                    additionalInfo: "Use appropriate equipment for minimum tillage"
-                }
-            ]
+            category: tipsT.categories.waterManagement.title,
+            tips: tipsT.categories.waterManagement.tips
         },
         {
-            category: "Pest Management",
-            tips: [
-                {
-                    title: "Integrated Pest Management",
-                    description: "Use IPM techniques for sustainable pest control",
-                    frequency: "As needed",
-                    importance: "High",
-                    additionalInfo: "Combine multiple control methods for better results"
-                },
-                {
-                    title: "Resistant Varieties",
-                    description: "Plant pest-resistant crop varieties",
-                    frequency: "Seasonally",
-                    importance: "Medium",
-                    additionalInfo: "Choose varieties based on local pest pressure"
-                },
-                {
-                    title: "Crop Spacing",
-                    description: "Maintain proper spacing between crops",
-                    frequency: "During planting",
-                    importance: "Medium",
-                    additionalInfo: "Follow recommended spacing for each crop"
-                },
-                {
-                    title: "Natural Repellents",
-                    description: "Use natural pest repellents and biological controls",
-                    frequency: "As needed",
-                    importance: "Medium",
-                    additionalInfo: "Prepare natural repellents from local materials"
-                },
-                {
-                    title: "Pest Monitoring",
-                    description: "Regular monitoring of pest populations",
-                    frequency: "Weekly",
-                    importance: "High",
-                    additionalInfo: "Use pheromone traps for monitoring"
-                },
-                {
-                    title: "Sanitation Practices",
-                    description: "Maintain field sanitation to prevent pest buildup",
-                    frequency: "Regularly",
-                    importance: "Medium",
-                    additionalInfo: "Remove crop residues and weeds regularly"
-                }
-            ]
+            category: tipsT.categories.pestManagement.title,
+            tips: tipsT.categories.pestManagement.tips
         }
     ];
 
     const marketInfo = [
-        {
-            title: "Market Prices",
-            description: "Real-time prices for major crops in your region",
-            features: [
-                "Daily price updates",
-                "Regional price variations",
-                "Historical price trends",
-                "Price alerts",
-                "Market demand analysis",
-                "Export prices",
-                "Local market rates"
-            ],
-            source: "Agmarknet Portal",
-            link: "https://agmarknet.gov.in/"
-        },
-        {
-            title: "Weather Forecast",
-            description: "Accurate weather predictions for better farming decisions",
-            features: [
-                "7-day forecast",
-                "Rainfall predictions",
-                "Temperature trends",
-                "Weather alerts",
-                "Humidity levels",
-                "Wind speed data",
-                "UV index information"
-            ],
-            source: "IMD Weather Portal",
-            link: "https://mausam.imd.gov.in/"
-        },
-        {
-            title: "Best Practices",
-            description: "Latest farming techniques and research findings",
-            features: [
-                "Research updates",
-                "Expert recommendations",
-                "Case studies",
-                "Training materials",
-                "Success stories",
-                "Innovation guides",
-                "Technology adoption tips"
-            ],
-            source: "ICAR Knowledge Portal",
-            link: "https://icar.org.in/"
-        },
-        {
-            title: "Market Demand",
-            description: "Current market demand and future projections",
-            features: [
-                "Demand forecasts",
-                "Supply analysis",
-                "Price trends",
-                "Export opportunities",
-                "Local market insights",
-                "Consumer preferences",
-                "Seasonal variations"
-            ],
-            source: "Agricultural Marketing Portal",
-            link: "https://agmarknet.gov.in/"
-        }
+        marketT.marketPrices,
+        marketT.weatherForecast,
+        marketT.bestPractices,
+        marketT.marketDemand
     ];
 
     const renderModalContent = () => {
@@ -861,12 +662,12 @@ const ResourceHubPage = () => {
                         </div>
                         <div className="modal-body">
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faCheckCircle} /> Eligibility</h4>
+                                <h4><FontAwesomeIcon icon={faCheckCircle} /> {t.eligibility}</h4>
                                 <p>{selectedItem.eligibility}</p>
                             </div>
 
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faHandHoldingUsd} /> Benefits</h4>
+                                <h4><FontAwesomeIcon icon={faHandHoldingUsd} /> {t.benefits}</h4>
                                 <ul>
                                     {selectedItem.benefits.map((benefit, i) => (
                                         <li key={i}>{benefit}</li>
@@ -875,7 +676,7 @@ const ResourceHubPage = () => {
                             </div>
 
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faFileAlt} /> Required Documents</h4>
+                                <h4><FontAwesomeIcon icon={faFileAlt} /> {t.requiredDocuments}</h4>
                                 <ul>
                                     {selectedItem.documents.map((doc, i) => (
                                         <li key={i}>{doc}</li>
@@ -884,7 +685,7 @@ const ResourceHubPage = () => {
                             </div>
 
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faInfoCircle} /> How to Apply</h4>
+                                <h4><FontAwesomeIcon icon={faInfoCircle} /> {t.howToApply}</h4>
                                 <ol>
                                     {selectedItem.howToApply.map((step, i) => (
                                         <li key={i}>{step}</li>
@@ -893,7 +694,7 @@ const ResourceHubPage = () => {
                             </div>
 
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faExclamationTriangle} /> Important Notes</h4>
+                                <h4><FontAwesomeIcon icon={faExclamationTriangle} /> {t.importantNotes}</h4>
                                 <ul>
                                     {selectedItem.importantNotes.map((note, i) => (
                                         <li key={i}>{note}</li>
@@ -902,7 +703,7 @@ const ResourceHubPage = () => {
                             </div>
 
                             <a href={selectedItem.link} target="_blank" rel="noopener noreferrer" className="apply-link">
-                                Apply Now <FontAwesomeIcon icon={faFileAlt} />
+                                {t.applyNow} <FontAwesomeIcon icon={faFileAlt} />
                             </a>
                         </div>
                     </div>
@@ -919,9 +720,9 @@ const ResourceHubPage = () => {
                         </div>
                         <div className="modal-body">
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faCheckCircle} /> Eligible Items</h4>
+                                <h4><FontAwesomeIcon icon={faCheckCircle} /> {selectedItem.eligibleItems.title}</h4>
                                 <div className="eligible-items">
-                                    {selectedItem.eligibleItems.map((item, i) => (
+                                    {selectedItem.eligibleItems.items.map((item, i) => (
                                         <div key={i} className="eligible-item">
                                             <h5>{item.name}</h5>
                                             <p className="subsidy-amount">{item.subsidy}</p>
@@ -937,25 +738,25 @@ const ResourceHubPage = () => {
                             </div>
 
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faInfoCircle} /> How to Apply</h4>
+                                <h4><FontAwesomeIcon icon={faInfoCircle} /> {selectedItem.howToApply.title}</h4>
                                 <ol>
-                                    {selectedItem.howToApply.map((step, i) => (
+                                    {selectedItem.howToApply.steps.map((step, i) => (
                                         <li key={i}>{step}</li>
                                     ))}
                                 </ol>
                             </div>
 
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faExclamationTriangle} /> Important Notes</h4>
+                                <h4><FontAwesomeIcon icon={faExclamationTriangle} /> {selectedItem.importantNotes.title}</h4>
                                 <ul>
-                                    {selectedItem.importantNotes.map((note, i) => (
+                                    {selectedItem.importantNotes.notes.map((note, i) => (
                                         <li key={i}>{note}</li>
                                     ))}
                                 </ul>
                             </div>
 
                             <a href={selectedItem.link} target="_blank" rel="noopener noreferrer" className="apply-link">
-                                Learn More <FontAwesomeIcon icon={faFileAlt} />
+                                {t.learnMore} <FontAwesomeIcon icon={faFileAlt} />
                             </a>
                         </div>
                     </div>
@@ -978,10 +779,10 @@ const ResourceHubPage = () => {
                                         <p>{tip.description}</p>
                                         <div className="tip-meta">
                                             <span className="frequency">
-                                                <FontAwesomeIcon icon={faInfoCircle} /> Frequency: {tip.frequency}
+                                                <FontAwesomeIcon icon={faInfoCircle} /> {tipsT.labels.frequency}: {tip.frequency}
                                             </span>
                                             <span className={`importance ${tip.importance.toLowerCase()}`}>
-                                                <FontAwesomeIcon icon={faExclamationTriangle} /> Importance: {tip.importance}
+                                                <FontAwesomeIcon icon={faExclamationTriangle} /> {tipsT.labels.importance}: {tip.importance}
                                             </span>
                                         </div>
                                     </div>
@@ -1011,9 +812,9 @@ const ResourceHubPage = () => {
                             </div>
 
                             <div className="source-section">
-                                <p>Source: {selectedItem.source}</p>
+                                <p>{marketT.labels.source}: {selectedItem.source}</p>
                                 <a href={selectedItem.link} target="_blank" rel="noopener noreferrer" className="market-link">
-                                    Visit Portal <FontAwesomeIcon icon={faFileAlt} />
+                                    {marketT.labels.visitPortal} <FontAwesomeIcon icon={faFileAlt} />
                                 </a>
                             </div>
                         </div>
@@ -1031,12 +832,12 @@ const ResourceHubPage = () => {
                         </div>
                         <div className="modal-body">
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faCheckCircle} /> Eligibility</h4>
+                                <h4><FontAwesomeIcon icon={faCheckCircle} /> {t.eligibility}</h4>
                                 <p>{selectedItem.eligibility}</p>
                             </div>
 
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faHandHoldingUsd} /> Benefits</h4>
+                                <h4><FontAwesomeIcon icon={faHandHoldingUsd} /> {t.benefits}</h4>
                                 <ul>
                                     {selectedItem.benefits.map((benefit, i) => (
                                         <li key={i}>{benefit}</li>
@@ -1045,7 +846,7 @@ const ResourceHubPage = () => {
                             </div>
 
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faFileAlt} /> Required Documents</h4>
+                                <h4><FontAwesomeIcon icon={faFileAlt} /> {t.requiredDocuments}</h4>
                                 <ul>
                                     {selectedItem.documents.map((doc, i) => (
                                         <li key={i}>{doc}</li>
@@ -1054,7 +855,7 @@ const ResourceHubPage = () => {
                             </div>
 
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faInfoCircle} /> How to Apply</h4>
+                                <h4><FontAwesomeIcon icon={faInfoCircle} /> {t.howToApply}</h4>
                                 <ol>
                                     {selectedItem.howToApply.map((step, i) => (
                                         <li key={i}>{step}</li>
@@ -1063,7 +864,7 @@ const ResourceHubPage = () => {
                             </div>
 
                             <div className="detail-section">
-                                <h4><FontAwesomeIcon icon={faExclamationTriangle} /> Important Notes</h4>
+                                <h4><FontAwesomeIcon icon={faExclamationTriangle} /> {t.importantNotes}</h4>
                                 <ul>
                                     {selectedItem.importantNotes.map((note, i) => (
                                         <li key={i}>{note}</li>
@@ -1072,7 +873,7 @@ const ResourceHubPage = () => {
                             </div>
 
                             <a href={selectedItem.link} target="_blank" rel="noopener noreferrer" className="apply-link">
-                                Apply Now <FontAwesomeIcon icon={faFileAlt} />
+                                {t.applyNow} <FontAwesomeIcon icon={faFileAlt} />
                             </a>
                         </div>
                     </div>
@@ -1086,39 +887,40 @@ const ResourceHubPage = () => {
     return (
         <div className="resource-hub-page">
             <FarmerNavBar />
+            <LanguageSelector />
             <div className="resource-hub-content">
-                <h1>Farmer Resource Hub</h1>
+                <h1>{t.title}</h1>
             
             <div className="tabs">
                 <button 
                     className={`tab ${activeTab === 'schemes' ? 'active' : ''}`}
                     onClick={() => setActiveTab('schemes')}
                 >
-                    <FontAwesomeIcon icon={faHandHoldingUsd} /> Government Schemes
+                        <FontAwesomeIcon icon={faHandHoldingUsd} /> {t.tabs.schemes}
                 </button>
                 <button 
                     className={`tab ${activeTab === 'subsidies' ? 'active' : ''}`}
                     onClick={() => setActiveTab('subsidies')}
                 >
-                    <FontAwesomeIcon icon={faSeedling} /> Subsidies
+                        <FontAwesomeIcon icon={faSeedling} /> {t.tabs.subsidies}
                 </button>
                     <button 
                         className={`tab ${activeTab === 'grants' ? 'active' : ''}`}
                         onClick={() => setActiveTab('grants')}
                     >
-                        <FontAwesomeIcon icon={faHandHoldingUsd} /> Government Grants
+                        <FontAwesomeIcon icon={faHandHoldingUsd} /> {t.tabs.grants}
                     </button>
                 <button 
                     className={`tab ${activeTab === 'tips' ? 'active' : ''}`}
                     onClick={() => setActiveTab('tips')}
                 >
-                    <FontAwesomeIcon icon={faTractor} /> Farming Tips
+                        <FontAwesomeIcon icon={faTractor} /> {t.tabs.tips}
                 </button>
                 <button 
                     className={`tab ${activeTab === 'market' ? 'active' : ''}`}
                     onClick={() => setActiveTab('market')}
                 >
-                    <FontAwesomeIcon icon={faBook} /> Market Information
+                        <FontAwesomeIcon icon={faBook} /> {t.tabs.market}
                 </button>
             </div>
 
@@ -1133,7 +935,7 @@ const ResourceHubPage = () => {
                                         className="view-details-button"
                                         onClick={() => openModal(scheme, 'scheme')}
                                     >
-                                        View Details
+                                        {t.viewDetails}
                                     </button>
                             </div>
                         ))}
@@ -1150,7 +952,7 @@ const ResourceHubPage = () => {
                                         className="view-details-button"
                                         onClick={() => openModal(subsidy, 'subsidy')}
                                     >
-                                        View Details
+                                        {t.viewDetails}
                                     </button>
                                 </div>
                             ))}
@@ -1167,7 +969,7 @@ const ResourceHubPage = () => {
                                         className="view-details-button"
                                         onClick={() => openModal(grant, 'grant')}
                                     >
-                                        View Details
+                                        {t.viewDetails}
                                     </button>
                             </div>
                         ))}
@@ -1183,7 +985,7 @@ const ResourceHubPage = () => {
                                         className="view-details-button"
                                         onClick={() => openModal(category, 'tips')}
                                     >
-                                        View Tips
+                                        {t.viewDetails}
                                     </button>
                             </div>
                         ))}
@@ -1200,7 +1002,7 @@ const ResourceHubPage = () => {
                                         className="view-details-button"
                                         onClick={() => openModal(info, 'market')}
                                     >
-                                        View Details
+                                        {t.viewDetails}
                                     </button>
                             </div>
                         ))}

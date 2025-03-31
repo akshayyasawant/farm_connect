@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faSignOutAlt, faBook } from '@fortawesome/free-solid-svg-icons'; // Added faBook icon
+import { faUser, faSignOutAlt, faBook, faChartLine } from '@fortawesome/free-solid-svg-icons'; // Added faChartLine icon
 import './FarmerNavBar.css'; // Import your custom CSS
 import SubscribedLabel from './components/SubscribedLabel';
 import { useLanguage } from './context/LanguageContext';
@@ -11,19 +11,22 @@ const translations = {
     home: "Home",
     account: "Account",
     logout: "Logout",
-    resourceHub: "Resource Hub"
+    resourceHub: "Resource Hub",
+    analytics: "Analytics"
   },
   mr: {
     home: "होम",
     account: "खाते",
     logout: "लॉगआउट",
-    resourceHub: "संसाधन केंद्र"
+    resourceHub: "संसाधन केंद्र",
+    analytics: "विश्लेषण"
   },
   hi: {
     home: "होम",
     account: "खाता",
     logout: "लॉगआउट",
-    resourceHub: "संसाधन केंद्र"
+    resourceHub: "संसाधन केंद्र",
+    analytics: "विश्लेषण"
   }
 };
 
@@ -75,6 +78,9 @@ const FarmerNavBar = ({ onLogout }) => {
                 <li onClick={() => navigate('/farmer-dashboard')}>{t.home}</li>
                 <li onClick={() => navigate('/resource-hub')}>
                     <FontAwesomeIcon icon={faBook} className="icon" /> {t.resourceHub}
+                </li>
+                <li onClick={() => navigate('/farmer-analytics')}>
+                    <FontAwesomeIcon icon={faChartLine} className="icon" /> {t.analytics}
                 </li>
                 <li onClick={() => navigate('/farmer-account')}>
                     <FontAwesomeIcon icon={faUser} className="icon" /> {t.account}
