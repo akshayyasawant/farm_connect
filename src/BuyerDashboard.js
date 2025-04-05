@@ -5,6 +5,7 @@ import './BuyerDashboard.css';
 import SubsSection from './components/SubSection';
 import FeaturedFarmers from './components/FeaturedFarmers';
 import Footer from './components/Footer';
+import ChatWindow from './components/ChatWindow';
 
 const BuyerDashboard = () => {
     const navigate = useNavigate();
@@ -147,6 +148,7 @@ const BuyerDashboard = () => {
                 </div>
             </div>
         </div>
+        <ChatWindow />
         <Footer></Footer>
       </>
     );

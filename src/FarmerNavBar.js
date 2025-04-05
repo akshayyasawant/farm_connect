@@ -85,6 +85,9 @@ const FarmerNavBar = ({ onLogout }) => {
                 <li onClick={() => navigate('/farmer-account')}>
                     <FontAwesomeIcon icon={faUser} className="icon" /> {t.account}
                 </li>
+                <li onClick={() => navigate('/predict')}>
+                    <FontAwesomeIcon icon={faUser} className="icon" /> Predict
+                </li>
                 <li onClick={onLogout}>
                     <FontAwesomeIcon icon={faSignOutAlt} className="icon" /> {t.logout}
                 </li>

@@ -30,7 +30,7 @@ import BuyerSubscriptionPage from './components/SubscriptionForm';
 import ResourceHub from './components/ResourceHub'; // Import the ResourceHub component
 import FarmerAnalytics from './components/FarmerAnalytics';
 import { LanguageProvider } from './context/LanguageContext';
-
+import PredictCrop from './components/PredictCrop';
 
 // Create a wrapper component for handling logout and navigation
 const AppRoutes = () => {
@@ -86,6 +86,7 @@ const AppRoutes = () => {
 
 
       <Route path="/admin-page" element={<AdminDashboardPage />} />
+      <Route path="/predict" element={<PredictCrop />} />
 
 
       {/* Protected routes for Farmer Dashboard and Pages */}

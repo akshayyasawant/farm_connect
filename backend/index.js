@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use('/uploads', express.static('uploads')); // Serve static files from the 'uploads' directory
 
 //MongoDB connection
-mongoose.connect('mongodb+srv://farmconnect:farmconnect@cluster0.vmjfhyu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect('mongodb+srv://akshayya:farmconnect@cluster0.xqbevrk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => console.log('MongoDB connected'))
@@ -92,7 +92,27 @@ const farmerSchema = new mongoose.Schema({
 
 const Farmer = mongoose.model('Farmer', farmerSchema);
 
+app.post("/predict", upload.single("image"), async (req, res) => {
+  try {
+      if (!req.file) {
+          return res.status(400).json({ error: "No file uploaded" });
+      }
 
+      // Send image to Flask API
+      const flaskResponse = await axios.post("http://localhost:5000/predict", 
+          { file: fs.createReadStream(req.file.path) },
+          { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      // Remove uploaded file
+      fs.unlinkSync(req.file.path);
+
+      // Send the prediction response to frontend
+      res.json(flaskResponse.data);
+  } catch (error) {
+      res.status(500).json({ error: "Error predicting image" });
+    }
+});
 
 app.get('/api/products/:productId/farmer-details', async (req, res) => {
   const { productId } = req.params;
